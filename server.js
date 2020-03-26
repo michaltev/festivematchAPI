@@ -117,6 +117,17 @@ app.get('/defaultartists', (req, res) => {
     .catch(error => {res.status(400).json('error getting artists');})
 })
 
+app.get('/similarartists/:artistid', (req, res) => {
+	const favbandid = req.params.artistid;
+	
+	fetch(`https://api.songkick.com/api/3.0/artists/${favbandid}/similar_artists.json?apikey=${songkickAPI.APIkey}`)
+    .then(data => data.json())
+    .then(artists => {
+    	res.json(mapNecessaryArtistsInfo(artists.resultsPage.results.artist));
+    })
+    .catch(error => {res.status(400).json('error getting artists');});
+})
+
 app.get('/artists/:name', (req, res) => {
 	const {name} = req.params;
 	fetch(`https://api.songkick.com/api/3.0/search/artists.json?apikey=${songkickAPI.APIkey}&query=${name}`)
@@ -126,6 +137,8 @@ app.get('/artists/:name', (req, res) => {
     })
     .catch(error => {res.status(400).json('error getting artists');})
 })
+
+
 
 app.listen(3000, () => {
 	console.log('app is running');
