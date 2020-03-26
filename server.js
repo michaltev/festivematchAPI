@@ -33,6 +33,12 @@ mapNecessaryArtistsInfo = (p_artistsArray) => {
 	return artistsInfo;
 }
 
+filterFestivals = (p_eventsArray) => {
+	const festivals = p_eventsArray.filter(event => event.type === "Festival");
+
+	return festivals;
+}
+
 app.get('/', (req, res) => {
 	console.log('getting');
 	res.json('getting');
@@ -136,6 +142,17 @@ app.get('/artists/:name', (req, res) => {
     	res.json(mapNecessaryArtistsInfo(artists.resultsPage.results.artist));
     })
     .catch(error => {res.status(400).json('error getting artists');})
+})
+
+app.get('/festivals/:artistid', (req, res) => {
+	const artistID = req.params.artistid;
+	
+	fetch(`https://api.songkick.com/api/3.0/artists/${artistID}/calendar.json?apikey=${songkickAPI.APIkey}`)
+    .then(data => data.json())
+    .then(events => {
+    	res.json(filterFestivals(events.resultsPage.results.event));
+    })
+    .catch(error => {res.status(400).json('error getting events');});
 })
 
 
