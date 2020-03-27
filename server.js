@@ -152,7 +152,11 @@ app.get('/festivals/:artistid', (req, res) => {
 	fetch(`https://api.songkick.com/api/3.0/artists/${artistID}/calendar.json?apikey=${songkickAPI.APIkey}`)
     .then(data => data.json())
     .then(events => {
-    	res.json(filterFestivals(events.resultsPage.results.event));
+    	if(events.resultsPage.totalEntries > 0)
+    	{
+    		res.json(filterFestivals(events.resultsPage.results.event));
+    	}
+    	else {res.json([]);}
     })
     .catch(error => {res.status(400).json('error getting events');});
 })
