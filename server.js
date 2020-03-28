@@ -39,6 +39,16 @@ filterFestivals = (p_eventsArray) => {
 	return festivals;
 }
 
+filterCollaboration = (p_eventsArray, p_collabArtistID) => {
+	const festivals = p_eventsArray.filter(event => {
+		return ((event.type === "Festival") &&
+				(event.performance.some(collab => {
+					return (collab.artist.id==p_collabArtistID)
+				}))); 
+	});
+	return festivals;
+}
+
 app.get('/', (req, res) => {
 	console.log('getting');
 	res.json('getting');
@@ -159,6 +169,24 @@ app.get('/festivals/:artistid', (req, res) => {
     	else {res.json([]);}
     })
     .catch(error => {res.status(400).json('error getting events');});
+})
+
+app.get('/festivals/:artistid/:secondartistid', (req, res) => {
+	
+	const artistID = req.params.artistid;
+	const collabArtistID = req.params.secondartistid;
+	
+	fetch(`https://api.songkick.com/api/3.0/artists/${artistID}/calendar.json?apikey=${songkickAPI.APIkey}`)
+    .then(data => data.json())
+    .then(events => {
+    	if(events.resultsPage.totalEntries > 0)
+    	{
+    		res.json(filterCollaboration(events.resultsPage.results.event, collabArtistID));
+    	}
+    	else {res.json([]);}
+    })
+    .catch(error => {res.status(400).json('error getting events');});
+
 })
 
 
