@@ -7,9 +7,21 @@ const getDefaultArtists = (req, res, songkickAPI) => {
     	res.json(mapNecessaryArtistsInfo(artists.resultsPage.results.artist));
     })
     .catch(error => {res.status(400).json('error getting artists');})
-}
+};
+
+const getSimilarArtists = (req, res, songkickAPI) => {
+	const favbandid = req.params.artistid;
+	
+	fetch(`https://api.songkick.com/api/3.0/artists/${favbandid}/similar_artists.json?apikey=${songkickAPI.APIkey}`)
+    .then(data => data.json())
+    .then(artists => {
+    	res.json(mapNecessaryArtistsInfo(artists.resultsPage.results.artist));
+    })
+    .catch(error => {res.status(400).json('error getting artists');});
+};
 
 
 module.exports = {
-	getDefaultArtists: getDefaultArtists
+	getDefaultArtists: getDefaultArtists,
+	getSimilarArtists: getSimilarArtists
 }
