@@ -26,15 +26,6 @@ var app = express()
 app.use(cors())
 app.use(express.json())
 
-mapNecessaryArtistsInfo = (p_artistsArray) => {
-	const artistsInfo = p_artistsArray.map(item => {
-		    const  {id, displayName} = item;
-		    return {id: id, name: displayName};
-		});
-
-	return artistsInfo;
-}
-
 filterFestivals = (p_eventsArray) => {
 	const festivals = p_eventsArray.filter(event => event.type === "Festival");
 
