@@ -22,7 +22,6 @@ const handleSignin = (req, res, db) => {
 	.catch(error => {res.status(400).json('error getting the user')});
 };
 
-
 const handleRegister = (req, res, db) => {
 	const { email, name, password } = req.body;
     const hash = bcrypt.hashSync(password);
@@ -60,10 +59,22 @@ const getUserProfile = (req, res, db) => {
 	.where('id',id)
 	.then(users => { res.json(users[0]); })
 	.catch(error => {res.status(400).json('error getting the user')});
+};
+
+const updateFavArtist = (req, res, db) => {
+	const {id, bandID, bandName} = req.body;
+
+	db('users')
+	.returning('*')
+	.where({id})
+	.update({ favbandid : bandID , favbandname: bandName})
+	.then(user => {res.json(user[0]);})
+	.catch(error => {res.status(400).json('user not found');})
 }
 
 module.exports = {
 	handleSignin: handleSignin,
 	handleRegister: handleRegister, 
-	getUserProfile: getUserProfile
+	getUserProfile: getUserProfile,
+	updateFavArtist: updateFavArtist
 }

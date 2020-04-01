@@ -61,16 +61,7 @@ app.post('/register', (req, res) => { usersController.handleRegister(req, res, d
 
 app.get('/profile/:id', (req, res) => { usersController.getUserProfile(req, res, db) });
 
-app.put('/favband', (req, res) => {
-	const {id, bandID, bandName} = req.body;
-
-	db('users')
-	.returning('*')
-	.where({id})
-	.update({ favbandid : bandID , favbandname: bandName})
-	.then(user => {res.json(user[0]);})
-	.catch(error => {res.status(400).json('user not found');})
-})
+app.put('/favband', (req, res) => { usersController.updateFavArtist(req, res, db) });
 
 app.get('/defaultartists', (req, res) => {
 	fetch(`https://api.songkick.com/api/3.0/artists/${songkickAPI.defaultArtist}/similar_artists.json?apikey=${songkickAPI.APIkey}`)
