@@ -1,5 +1,14 @@
 const fetch = require('node-fetch');
 
+mapNecessaryArtistsInfo = (p_artistsArray) => {
+	const artistsInfo = p_artistsArray.map(item => {
+		    const  {id, displayName} = item;
+		    return {id: id, name: displayName};
+		});
+
+	return artistsInfo;
+}
+
 const getDefaultArtists = (req, res, songkickAPI) => {
 	fetch(`https://api.songkick.com/api/3.0/artists/${songkickAPI.defaultArtist}/similar_artists.json?apikey=${songkickAPI.APIkey}`)
     .then(data => data.json())
