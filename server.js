@@ -4,6 +4,7 @@ const knex = require('knex')
 const fetch = require('node-fetch');
 
 const usersController = require('./controllers/usersController');
+const artistsController = require('./controllers/artistsController');
 
 const songkickAPI = {
 	APIkey : "JHoWuXAj6UrhH3ji",
@@ -63,14 +64,7 @@ app.get('/profile/:id', (req, res) => { usersController.getUserProfile(req, res,
 
 app.put('/favband', (req, res) => { usersController.updateFavArtist(req, res, db) });
 
-app.get('/defaultartists', (req, res) => {
-	fetch(`https://api.songkick.com/api/3.0/artists/${songkickAPI.defaultArtist}/similar_artists.json?apikey=${songkickAPI.APIkey}`)
-    .then(data => data.json())
-    .then(artists => {
-    	res.json(mapNecessaryArtistsInfo(artists.resultsPage.results.artist));
-    })
-    .catch(error => {res.status(400).json('error getting artists');})
-})
+app.get('/defaultartists', (req, res) => { artistsController.getDefaultArtists(req, res, songkickAPI) });
 
 app.get('/similarartists/:artistid', (req, res) => {
 	const favbandid = req.params.artistid;
