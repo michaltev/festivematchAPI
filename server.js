@@ -4,6 +4,8 @@ const knex = require('knex')
 const bcrypt = require('bcrypt-nodejs')
 const fetch = require('node-fetch');
 
+const usersController = require('./controllers/usersController');
+
 const songkickAPI = {
 	APIkey : "JHoWuXAj6UrhH3ji",
 	defaultArtist : 217815
@@ -54,26 +56,7 @@ app.get('/', (req, res) => {
 	res.json('getting');
 });
 
-app.post('/signin', (req, res) => {
-	db.select('email', 'hash')
-	.from('login')
-	.where('email', req.body.email)
-	.then(data => {
-		if (bcrypt.compareSync(req.body.password, data[0].hash)) 
-		{
-			return (db('users')
-			.where('email', '=', req.body.email)
-			.select('*')
-			.then(user => {res.json(user[0]);})
-			.catch(error => {res.status(400).json('user not found');}))
-		}
-		else 
-		{
-			res.status(400).json('wrong password');
-		}
-	})
-	.catch(error => {res.status(400).json('error getting the user')});
-});
+app.post('/signin', (req, res) => { usersController.handleSignin(req, res, db, bcrypt) });
 
 app.post('/register', (req, res) => {
   const { email, name, password } = req.body;
