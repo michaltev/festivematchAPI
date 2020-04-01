@@ -68,17 +68,7 @@ app.get('/defaultartists', (req, res) => { artistsController.getDefaultArtists(r
 
 app.get('/similarartists/:artistid', (req, res) => { artistsController.getSimilarArtists(req, res, songkickAPI) });
 
-app.get('/artists/:name', (req, res) => {
-	const {name} = req.params;
-	fetch(`https://api.songkick.com/api/3.0/search/artists.json?apikey=${songkickAPI.APIkey}&query=${name}&per_page=6`)
-    .then(data => data.json())
-    .then(data => {
-    	if(data.resultsPage.totalEntries > 0)
-    		{ res.json(mapNecessaryArtistsInfo(data.resultsPage.results.artist));}
-    	else { res.json([]); }
-    })
-    .catch(error => {res.status(400).json('error getting artists');})
-})
+app.get('/artists/:name', (req, res) => { artistsController.searchArtistByName(req, res, songkickAPI) })
 
 app.get('/festivals/:artistid', (req, res) => {
 	const artistID = req.params.artistid;
