@@ -59,15 +59,7 @@ app.post('/signin', (req, res) => { usersController.handleSignin(req, res, db) }
 
 app.post('/register', (req, res) => { usersController.handleRegister(req, res, db) });
 
-app.get('/profile/:id', (req, res) => {
-	const {id} = req.params;
-	
-	db('users')
-	.select(['id', 'name', 'favbandid', 'favbandname'])
-	.where('id',id)
-	.then(users => { res.json(users[0]); })
-	.catch(error => {res.status(400).json('error getting the user')});
-})
+app.get('/profile/:id', (req, res) => { usersController.getUserProfile(req, res, db) });
 
 app.put('/favband', (req, res) => {
 	const {id, bandID, bandName} = req.body;

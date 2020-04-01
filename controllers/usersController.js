@@ -52,7 +52,18 @@ const handleRegister = (req, res, db) => {
     .catch(err => res.status(400).json('unable to register'))
 };
 
+const getUserProfile = (req, res, db) => {
+	const {id} = req.params;
+	
+	db('users')
+	.select(['id', 'name', 'favbandid', 'favbandname'])
+	.where('id',id)
+	.then(users => { res.json(users[0]); })
+	.catch(error => {res.status(400).json('error getting the user')});
+}
+
 module.exports = {
 	handleSignin: handleSignin,
-	handleRegister: handleRegister
+	handleRegister: handleRegister, 
+	getUserProfile: getUserProfile
 }
